@@ -1,67 +1,21 @@
 
 
 
-const express = require('express');
-const app = express();
-const errorHandler = require('errorhandler');
-const pubSubHubbub = require('pubsubhubbub');
-
-const PORT = 1337;
-const PATH = '/pubSubHubbub';
-
-const pubsub = pubSubHubbub.createServer({
-    callbackUrl: 'https://youtubecallbackplace.herokuapp.com/youtube/callback',
-topic: 'https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA',
-hub: 'https://pubsubhubbub.appspot.com/subscribe'
-    
+const YouTubeNotifier = require('youtube-notification');
+ 
+const notifier = new YouTubeNotifier({
+  hubCallback: 'https://youtubecallbackplace.herokuapp.com/youtube/callback',
+  port: 8080,
+  path: '/youtube'
 });
-
-const topic = 'https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA';
-const hub = 'http://pubsubhubbub.appspot.com/';
-
-app.use(PATH, pubsub.listener());
-
-// default response
-app.get('/', (req, res) => {
-    res.send('hello world');
+notifier.setup();
+ 
+notifier.on('notified', data => {
+  console.log('New Video');
+  console.log(
+    `${data.channel.name} just uploaded a new video titled: ${data.video.title}`
+  );
 });
-
-errorHandler.title = 'PubSubHubbub test';
-app.use(errorHandler());
-
-app.listen(PORT, () => {
-    console.log('Server listening on port %s', PORT);
-    pubsub.subscribe(topic, hub);
-});
-
-pubsub.on('denied', data => {
-    console.log('Denied');
-    console.log(data);
-});
-
-pubsub.on('subscribe', data => {
-    console.log('Subscribe');
-    console.log(data);
-
-    console.log('Subscribed ' + topic + ' to ' + hub);
-});
-
-pubsub.on('unsubscribe', data => {
-    console.log('Unsubscribe');
-    console.log(data);
-
-    console.log('Unsubscribed ' + topic + ' from ' + hub);
-});
-
-pubsub.on('error', error => {
-    console.log('Error');
-    console.log(error);
-});
-
-pubsub.on('feed', data => {
-    console.log(data);
-    console.log(data.feed.toString());
-
-    pubsub.unsubscribe(topic, hub);
-});
+ 
+notifier.subscribe('UC1zAttFQKikWoKH3Vb39ETA');
 
