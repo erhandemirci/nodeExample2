@@ -32,14 +32,14 @@ console.log("subscribing is well");
     });
 });   
 
-pubsub.on('feed', data => {
+pubSubSubscriber.on('feed', data => {
     console.log(data);
     console.log(data.feed.toString());
 
     pubsub.unsubscribe(topic, hub);
 });
 
-pubsub.on('listen', () => {
+pubSubSubscriber.on('listen', () => {
     console.log('Server listening on port %s', pubsub.port);
     pubsub.subscribe(topic, hub);
 });
