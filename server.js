@@ -2,7 +2,7 @@ var pubSubHubbub = require("pubsubhubbub");
 
 
 var options = {
-  callback: "https://youtubecallbackplace.herokuapp.com/youtube/callback",
+  callback: "https://callbackerhan.herokuapp.com/youtube/callback",
   topic: "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA",
   mode: "subscribe",
   method: "POST",
@@ -14,7 +14,7 @@ var pubSubSubscriber = pubSubHubbub.createServer(options);
 
 pubSubSubscriber.listen(1337);
 var topic = "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA";
-var hub = "http://pubsubhubbub.appspot.com/subscribed";
+var hub = "http://pubsubhubbub.appspot.com/subscribe";
 
 pubSubSubscriber.on("subscribe", function(data){
     console.log(data.topic + " subscribed");
