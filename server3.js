@@ -1,6 +1,6 @@
-const express = require('express'),
-const app = express().use(express.static(__dirname + '/')),
-const http = require('http').Server(app),
+const express = require('express');
+const app = express().use(express.static(__dirname + '/'));
+const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
 
