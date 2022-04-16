@@ -1,52 +1,64 @@
-import favicon from "serve-favicon";
-server.use(favicon(path.join(__dirname, "../assets/images/favicon.ico")));
+const express = require('express');
+const app = express();
+const errorHandler = require('errorhandler');
+const pubSubHubbub = require('pubsubhubbub');
 
+const PORT = 1337;
+const PATH = '/pubSubHubbub';
 
-var pubSubHubbub = require("pubsubhubbub");
-
-
-var options = {
-  callback: "https://callbackerhan.herokuapp.com/youtube/callback",
-  topic: "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA",
-  mode: "subscribe",
-  method: "POST",
-  
-};
-
-
-var pubSubSubscriber = pubSubHubbub.createServer(options);
-
-const PORT = process.env.PORT || '5000';
-pubSubSubscriber.listen(PORT);
-var topic = "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA";
-var hub = "http://pubsubhubbub.appspot.com/subscribe";
-
-pubSubSubscriber.on("subscribe", function(data){
-    console.log(data.topic + " subscribed");
+const pubsub = pubSubHubbub.createServer({
+    callbackUrl: 'https://callbackerhan.herokuapp.com/youtube/callback',
+topic: 'https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA',
+hub: 'https://pubsubhubbub.appspot.com/subscribe'
+    
 });
 
+const topic = 'https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC1zAttFQKikWoKH3Vb39ETA';
+const hub = 'http://pubsubhubbub.appspot.com/';
 
+app.use(PATH, pubsub.listener());
 
-pubSubSubscriber.on("listen", function(){
-    pubSubSubscriber.subscribe(topic, hub, function(err){
-        if(err){
-            console.log("Failed subscribing");
-        }else{
-console.log("subscribing is well");
-}
-    });
-});   
+// default response
+app.get('/', (req, res) => {
+    res.send('hello world');
+});
 
-pubSubSubscriber.on('feed', data => {
+errorHandler.title = 'PubSubHubbub test';
+app.use(errorHandler());
+
+app.listen(PORT, () => {
+    console.log('Server listening on port %s', PORT);
+    pubsub.subscribe(topic, hub);
+});
+
+pubsub.on('denied', data => {
+    console.log('Denied');
+    console.log(data);
+});
+
+pubsub.on('subscribe', data => {
+    console.log('Subscribe');
+    console.log(data);
+
+    console.log('Subscribed ' + topic + ' to ' + hub);
+});
+
+pubsub.on('unsubscribe', data => {
+    console.log('Unsubscribe');
+    console.log(data);
+
+    console.log('Unsubscribed ' + topic + ' from ' + hub);
+});
+
+pubsub.on('error', error => {
+    console.log('Error');
+    console.log(error);
+});
+
+pubsub.on('feed', data => {
     console.log(data);
     console.log(data.feed.toString());
 
     pubsub.unsubscribe(topic, hub);
 });
 
-pubSubSubscriber.on('listen', () => {
-    console.log('Server listening on port %s', pubsub.port);
-    pubsub.subscribe(topic, hub);
-});
-
-  
