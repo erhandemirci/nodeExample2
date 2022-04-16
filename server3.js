@@ -1,6 +1,7 @@
 const express = require('express');
 const io = require('socket.io')(http);
 const app = express();
+const YouTubeNotifier = require('youtube-notification');
 
 
     // get an instance of router
@@ -25,7 +26,7 @@ const notifier = new YouTubeNotifier({
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 1337;
 const HOST = process.env.HOST || '0.0.0.0';
 
 app.listen(PORT, HOST, () => {
@@ -33,23 +34,12 @@ app.listen(PORT, HOST, () => {
 })
 
 
-const YouTubeNotifier = require('youtube-notification');
 
 
- const PORT = process.env.PORT || 1337;
 
-
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/index.html');
-    
-});
 
 io.on('connection', function(socket){
     console.log('a user connected');
-});
-
-http.listen(port, function(){
-    console.log("Node server listening on port " + port);
 });
 
 notifier.on('notified', data => {
