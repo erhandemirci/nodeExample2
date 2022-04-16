@@ -27,7 +27,7 @@ errorHandler.title = 'PubSubHubbub test';
 app.use(errorHandler());
 
 app.listen(PORT, () => {
-    console.log('Server listening on port %s', PORT);
+    console.log('hey erhan , Server listening on port %s', PORT);
     pubsub.subscribe(topic, hub);
 });
 
