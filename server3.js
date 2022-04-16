@@ -30,5 +30,6 @@ app.listen(PORT, HOST, () => {
 })
 
 
-
+  // apply the routes to our application
+    app.use('/', router);
 
