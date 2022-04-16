@@ -1,5 +1,4 @@
 const express = require('express');
-const io = require('socket.io')(http);
 const app = express();
 const YouTubeNotifier = require('youtube-notification');
 
@@ -34,13 +33,6 @@ app.listen(PORT, HOST, () => {
 })
 
 
-
-
-
-
-io.on('connection', function(socket){
-    console.log('a user connected');
-});
 
 notifier.on('notified', data => {
   console.log('New Video');
