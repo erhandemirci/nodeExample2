@@ -2,7 +2,7 @@
 const YouTubeNotifier = require('youtube-notification');
  
 const notifier = new YouTubeNotifier({
-  hubCallback: 'https://youtubecallbackplace.herokuapp.com/youtube/callback',
+  hubCallback: 'https://callbackerhan.herokuapp.com/youtube/callback',
   port: 1337,
  
   path: '/youtube'
