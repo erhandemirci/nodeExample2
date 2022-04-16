@@ -14,6 +14,10 @@ var router = express.Router();
         
     });
 
+router.get('/myapp/', function(req, res){
+    res.send("Hello from the root application URL");
+});
+
 
 
 
