@@ -3,7 +3,7 @@ const app = express();
 const errorHandler = require('errorhandler');
 const pubSubHubbub = require('pubsubhubbub');
 
-const PORT = 1337;
+const PORT = process.env.PORT || 1337;
 const PATH = '/pubSubHubbub';
 
 const pubsub = pubSubHubbub.createServer({
