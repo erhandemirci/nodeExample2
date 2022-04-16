@@ -1,7 +1,16 @@
 const express = require('express');
-const app = express().use(express.static(__dirname + '/'));
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+
+
+
+const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+      console.log('Server started on ' + HOST + ':' + PORT);
+})
 
 
 const YouTubeNotifier = require('youtube-notification');
@@ -29,12 +38,6 @@ http.listen(port, function(){
     console.log("Node server listening on port " + port);
 });
 
-
-
-
-
-
- 
 notifier.on('notified', data => {
   console.log('New Video');
   console.log(
